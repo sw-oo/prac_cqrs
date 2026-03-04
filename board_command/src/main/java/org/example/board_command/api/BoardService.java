@@ -19,27 +19,14 @@ import static com.example.demo.common.model.BaseResponseStatus.SIGNUP_INVALID_UU
 @Service
 public class BoardService {
     private final BoardRepository boardRepository;
-    private final UserRepository userRepository;
 
-    public BoardDto.RegRes register(BoardDto.RegReq dto, Long idx) {
-        User user = userRepository.findById(idx).orElseThrow(() -> BaseException.from(SIGNUP_INVALID_UUID));
-        Board entity = boardRepository.save(dto.toEntity(user));
+    public BoardDto.RegRes register(Long userIdx, String userName, BoardDto.RegReq dto) {
+
+        Board entity = boardRepository.save(dto.toEntity(userIdx, userName));
 
         return BoardDto.RegRes.from(entity);
     }
 
-    public List<BoardDto.ListRes> list() {
-        List<Board> boardList = boardRepository.findAll();
-        return boardList.stream().map(BoardDto.ListRes::from).toList();
-    }
-
-    @Transactional(readOnly = true)
-    public BoardDto.ReadRes read(Long idx) {
-        Board board = boardRepository.findById(idx).orElseThrow();
-        return BoardDto.ReadRes.from(board);
-    }
-
-    @Transactional // 설정을 통해 readOnly 설정해줄수있음
     public BoardDto.RegRes update(Long idx, BoardDto.RegReq dto) {
         Board board = boardRepository.findById(idx).orElseThrow();
         board.update(dto);

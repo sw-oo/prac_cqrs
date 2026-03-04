@@ -17,28 +17,19 @@ import java.util.List;
 @RequestMapping("/board")
 @RestController
 @RequiredArgsConstructor
-@Tag(name = "쿠쿠루삥뽕")
+@Tag(name="게시판 기능")
 public class BoardController {
     private final BoardService boardService;
 
     @Operation(summary = "게시글 등록", description = "제목, 내용을 입력해서 게시글을 작성하는 기능")
     @PostMapping("/reg")
-    public ResponseEntity register(@RequestBody BoardDto.RegReq dto, @AuthenticationPrincipal AuthUserDetails user) {
-        BoardDto.RegRes result = boardService.register(dto, user.getIdx());
+    public ResponseEntity register(
+            @RequestHeader(name="X-User-Idx") Long userIdx,
+            @RequestHeader(name="X-User-Name") String userName,
+            @RequestBody BoardDto.RegReq dto) {
+
+        BoardDto.RegRes result = boardService.register(userIdx, userName, dto);
         return ResponseEntity.ok(BaseResponse.success(result));
-    }
-
-
-    @GetMapping("/list")
-    public ResponseEntity list() {
-        List<BoardDto.ListRes> dto = boardService.list();
-        return ResponseEntity.ok(BaseResponse.success(dto));
-    }
-
-    @GetMapping("/read/{idx}")
-    public ResponseEntity read(@PathVariable Long idx) {
-        BoardDto.ReadRes dto = boardService.read(idx);
-        return ResponseEntity.ok(BaseResponse.success(dto));
     }
 
     @PutMapping("/update/{idx}")
