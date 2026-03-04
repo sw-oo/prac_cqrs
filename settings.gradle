@@ -1,1 +1,6 @@
 rootProject.name = 'prac_cqrs'
+
+include 'board_core'
+include 'board_command'
+include 'board_query'
+include 'gateway'
