@@ -5,6 +5,7 @@ description = 'board_command'
 
 
 dependencies {
+    implementation project(':board_core')
     implementation 'org.springframework.boot:spring-boot-starter-web'
 }
 
